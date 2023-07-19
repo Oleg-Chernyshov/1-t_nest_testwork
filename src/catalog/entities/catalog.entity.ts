@@ -19,6 +19,6 @@ export class Catalog {
 
     @ApiProperty()
     @OneToOne((type) => Category)
-    @JoinColumn({  name: "id" })
+    @JoinColumn({  name: "category_id" })
     category_id: Category;
 }
