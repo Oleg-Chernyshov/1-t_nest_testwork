@@ -18,6 +18,7 @@ export class Catalog {
     cost: number
 
     @ApiProperty()
+    @Column()
     @OneToOne((type) => Category)
     @JoinColumn({  name: "category_id" })
     category_id: Category;

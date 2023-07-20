@@ -20,8 +20,8 @@ export class CatalogController {
     return this.catalogService.create(createCatalogDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   @ApiResponse( { status:200 ,description:'Получены все товары' })
   findAll() {
     return this.catalogService.findAll();
