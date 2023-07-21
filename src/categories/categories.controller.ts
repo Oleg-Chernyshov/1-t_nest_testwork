@@ -36,7 +36,8 @@ export class CategoriesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @UsePipes(new JoiValidationPipe(UpdateCategoryScheme))
+  //@UsePipes(new JoiValidationPipe(UpdateCategoryScheme)) //Особенности Nest. 
+  //https://stackoverflow.com/questions/55818694/usepipesvalidationpipe-not-working-with-generics-abstract-controller
   @Patch(':id')
   @ApiResponse( { status:201 ,description:'Обновлена категория', type: Category })
   update(@Param('id', ParseIntPipe) id: string, @Body() updateCategoryDto: UpdateCategoryDto) {

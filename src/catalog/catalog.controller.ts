@@ -35,7 +35,8 @@ export class CatalogController {
   }
 
   @UseGuards(AuthGuard('jwt'))  
-  @UsePipes(new JoiValidationPipe(UpdateProductScheme))
+  //@UsePipes(new JoiValidationPipe(UpdateCatalogScheme)) //Особенности Nest. 
+  //https://stackoverflow.com/questions/55818694/usepipesvalidationpipe-not-working-with-generics-abstract-controller
   @ApiResponse( { status:201 ,description:'Товар обновлен', type: Catalog })
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: string, @Body() updateCatalogDto: UpdateCatalogDto) {
@@ -47,5 +48,12 @@ export class CatalogController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: string) {
     return this.catalogService.remove(+id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse( { status:201 ,description:'Товары отфильтрованы' })
+  @Get('filter/:id')
+  filter(@Param('id', ParseIntPipe) id: string) {
+    return this.catalogService.filter(+id);
   }
 }

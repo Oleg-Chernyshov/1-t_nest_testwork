@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn  } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne, ManyToMany  } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
 import { ApiProperty } from "@nestjs/swagger/dist"
 
@@ -19,7 +19,7 @@ export class Catalog {
 
     @ApiProperty()
     @Column()
-    @OneToOne((type) => Category)
+    @ManyToOne((type) => Category, (category) => category.id, {cascade: true, onDelete: "CASCADE"})
     @JoinColumn({  name: "category_id" })
     category_id: Category;
 }

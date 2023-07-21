@@ -3,7 +3,7 @@ import { CreateCatalogDto } from './dto/create-catalog.dto';
 import { UpdateCatalogDto } from './dto/update-catalog.dto';
 import { InjectRepository } from '@nestjs/typeorm/dist';
 import { Catalog } from './entities/catalog.entity';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 
 @Injectable()
 export class CatalogService {
@@ -17,7 +17,11 @@ export class CatalogService {
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        category_id: true,
+    },
+    });
   }
 
   findOne(id: number) {
@@ -28,6 +32,12 @@ export class CatalogService {
     return this.repository.save({...updateCatalogDto, id})
   }
 
+  filter(сur_id: number) {
+    
+    return this.repository.findBy({
+      category_id: Equal(сur_id),
+    })
+  }
   async remove(id: number) {
     return await this.repository.delete(id);
   }
