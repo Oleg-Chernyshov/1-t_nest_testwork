@@ -2,6 +2,8 @@
   <div id="nav">
     <RouterLink :to="{ name: 'Categories' }">Категории</RouterLink>
     <RouterLink :to="{ name: 'Catalog' }">Товары</RouterLink>
+    <RouterLink :to="{ name: 'Shop' }">Магазин</RouterLink>
+    <RouterLink :to="{ name: 'Catalog' }">Чат</RouterLink>
   </div>
   <router-view />
 </template>
@@ -32,4 +34,6 @@ body {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+@import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 </style>

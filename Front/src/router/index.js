@@ -7,17 +7,17 @@ const routes = [
     component: () => import('@/views/Auth.vue')
   },
   {
-    path: '/catalog',
+    path: '/admin/catalog',
     name: 'Catalog',
     component: () => import('@/views/CatalogPage')
   },
   {
-    path: '/categories',
+    path: '/admin/categories',
     name: 'Categories',
     component: () => import('@/views/CategoryPage'),
   },
   {
-    path: '/catalog-edit/:id?/:name?',
+    path: '/admin/catalog-edit/:id?/:name?',
     name: 'CatalogEdit',
     props: (route) => {
       return {
@@ -28,7 +28,7 @@ const routes = [
     component: () => import('@/views/CatalogEdit'),
   },
   {
-    path: '/category-edit/:id?/:name?',
+    path: '/admin/category-edit/:id?/:name?',
     name: 'CategoryEdit',
     props: (route) => {
       return {
@@ -39,7 +39,7 @@ const routes = [
     component: () => import('@/views/CategoryEdit'),
   },
   {
-    path: '/catalog-sorted/:filter_id?',
+    path: '/admin/catalog-sorted/:filter_id?',
     name: 'CatalogSorted',
     props: (route) => {
       return {
@@ -52,6 +52,17 @@ const routes = [
     path: '/:catchAll(.*)',
     name: 'NotFound',
     component: () => import('@/views/CatalogPage'),
+  },
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: () => import('../components/CommonUserComponents/v-catalog.vue')
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: () => import('../components/CommonUserComponents/v-cart.vue'),
+    props: true
   }
 ]
 

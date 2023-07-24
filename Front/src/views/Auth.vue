@@ -12,27 +12,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import Btn from "@/components/Btn/Btn.vue";
-import axios from "axios";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import Btn from '@/components/Btn/Btn.vue';
+import axios from 'axios';
 
 const router = useRouter();
 
 const form = ref({
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 });
 
 const onClick = () => {
   axios
     .post(
-      "http://localhost:3000/auth/login",
-      "user=" + JSON.stringify(form.value)
+      'http://localhost:3000/auth/login',
+      'user=' + JSON.stringify(form.value),
     )
     .then((result) => {
-      localStorage.setItem("access_token", result.data.access_token);
-      router.push("/catalog");
+      localStorage.setItem('access_token', result.data.access_token);
+      router.push('/shop');
     });
 };
 </script>

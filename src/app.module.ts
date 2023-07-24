@@ -10,6 +10,8 @@ import { DataSource } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
+import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [CatalogModule, CategoriesModule, UsersModule, AuthModule,     
@@ -22,7 +24,7 @@ import { User } from './users/entities/user.entity';
     database: '1t_shop',
     entities: [Category, Catalog, User],
     synchronize: true,
-  }),],
+  }), ChatModule, MessageModule,],
   controllers: [AppController],
   providers: [AppService],
 })
