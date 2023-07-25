@@ -17,4 +17,8 @@ export class User {
     @ApiProperty()
     @Column()
     password: string
+
+    @ApiProperty()
+    @Column( {default: false} )
+    is_admin: boolean
 }

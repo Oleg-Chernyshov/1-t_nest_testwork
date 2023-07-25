@@ -12,6 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
+import { Chat } from './chat/entities/chat.entity';
+import { Message } from './message/entities/message.entity';
 
 @Module({
   imports: [CatalogModule, CategoriesModule, UsersModule, AuthModule,     
@@ -22,12 +24,13 @@ import { MessageModule } from './message/message.module';
     username: 'root',
     password: '',
     database: '1t_shop',
-    entities: [Category, Catalog, User],
+    entities: [Category, Catalog, User, Chat, Message],
     synchronize: true,
   }), ChatModule, MessageModule,],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
