@@ -11,7 +11,7 @@ import { CreateMessageScheme } from './dto/create-message.dto';
 import { UpdateMessageScheme   } from './dto/update-message.dto';
 
 @ApiTags("Message")
-@WebSocketGateway()
+@WebSocketGateway({ cors: '*:*' })
 export class MessageGateway {
   constructor(private readonly messageService: MessageService) {}
 

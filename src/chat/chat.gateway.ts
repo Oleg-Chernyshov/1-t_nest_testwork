@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer} from '@nestjs/websockets';
 import { UseGuards, UsePipes } from '@nestjs/common/decorators';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -9,10 +9,14 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger/dist/decorators';
 import { JoiValidationPipe } from '../pipes/ValidationPipe'; 
 import { CreateChatScheme } from './dto/create-chat.dto';
 import { UpdateChatScheme } from './dto/update-chat.dto';
+import { Server } from 'socket.io';
 
 @ApiTags("Chat")
-@WebSocketGateway()
+@WebSocketGateway({ cors: '*:*' })
 export class ChatGateway {
+  @WebSocketServer()
+  server: Server;
+
   constructor(private readonly chatService: ChatService) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -31,7 +35,7 @@ export class ChatGateway {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @ApiResponse( { status:200 ,description:'Получены один чат', type: Chat })
+  @ApiResponse( { status:200 ,description:'Получен один чат', type: Chat })
   @SubscribeMessage('findOneChat')
   findOne(@MessageBody() id: number) {
     return this.chatService.findOne(id);
