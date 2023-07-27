@@ -24,11 +24,4 @@ export class ChatService {
     return this.repository.findOneBy({ id });
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return this.repository.save({...updateChatDto, id})
-  }
-
-  async remove(id: number) {
-    return await this.repository.delete(id);
-  }
 }

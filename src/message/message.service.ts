@@ -20,15 +20,4 @@ export class MessageService {
     return this.repository.find();
   }
 
-  findOne(id: number) {
-    return this.repository.findOneBy({ id });
-  }
-
-  update(id: number, updateMessageDto: UpdateMessageDto) {
-    return this.repository.save({...updateMessageDto, id})
-  }
-
-  async remove(id: number) {
-    return await this.repository.delete(id);
-  }
 }

@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { UseGuards, UsePipes } from '@nestjs/common/decorators';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -9,13 +9,21 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger/dist/decorators';
 import { JoiValidationPipe } from 'src/pipes/ValidationPipe';
 import { CreateMessageScheme } from './dto/create-message.dto';
 import { UpdateMessageScheme   } from './dto/update-message.dto';
+import { Socket, Server } from 'socket.io';
 
 @ApiTags("Message")
 @WebSocketGateway({ cors: '*:*' })
 export class MessageGateway {
   constructor(private readonly messageService: MessageService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @WebSocketServer()
+  server: Server;
+
+  handleConnection(client: Socket, ...args: any[]) {
+    console.log(`Connected ${client.handshake.auth.cur_author}`);
+  }
+
+
   @UsePipes(new JoiValidationPipe(CreateMessageScheme))
   @ApiResponse( { status:201 ,description:'Сообщение создано', type: Message })
   @SubscribeMessage('createMessage')
@@ -23,31 +31,10 @@ export class MessageGateway {
     return this.messageService.create(createMessageDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse( { status:200 ,description:'Получены все сообщения', type: [Message] })
   @SubscribeMessage('findAllMessage')
-  findAll() {
-    return this.messageService.findAll();
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @ApiResponse( { status:200 ,description:'Получены одно сообщение', type: Message })
-  @SubscribeMessage('findOneMessage')
-  findOne(@MessageBody() id: number) {
-    return this.messageService.findOne(id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @ApiResponse( { status:200 ,description:'Обновлено сообщение', type: Message })
-  @SubscribeMessage('updateMessage')
-  update(@MessageBody() updateMessageDto: UpdateMessageDto) {
-    return this.messageService.update(updateMessageDto.id, updateMessageDto);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @ApiResponse( { status:201 ,description:'Товар удален', type: Message })
-  @SubscribeMessage('removeMessage')
-  remove(@MessageBody() id: number) {
-    return this.messageService.remove(id);
+  async findAll() {
+    const messages = await this.messageService.findAll() 
+    return { event: "findAllMessage", data: messages}
   }
 }

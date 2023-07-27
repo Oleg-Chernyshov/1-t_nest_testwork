@@ -17,17 +17,24 @@ onMounted(() => {
     console.error(error);
   });
 
-  socket.on('get-chats', (data) => {
-    chats.value = data;
-  });
-
-  socket.on('chats_list_changed', (data) => {
-    rooms.value.push(data);
-  });
-
   socket.on('message', (data) => {
     messages.value.unshift(data);
   });
+
+  socket.on('findAllMessage', (data) => {
+    messages.value = data;
+    console.log(messages.value);
+  });
+
+  if (localStorage.getItem('is_admin')) {
+    socket.on('findAllChat', (data) => {
+      chats.value = data;
+      console.log(chats.value);
+    });
+
+    socket.emit('findAllMessage');
+  }
+  socket.emit('findAllChat');
 });
 
 const authorization = () => {
