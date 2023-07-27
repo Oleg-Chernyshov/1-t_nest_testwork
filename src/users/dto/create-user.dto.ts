@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger/dist"
 import * as joi from 'joi'
+import { Chat } from "src/chat/entities/chat.entity"
 
 export class CreateUserDto {
     
@@ -8,6 +9,9 @@ export class CreateUserDto {
 
     @ApiProperty()
     password: string
+
+    @ApiProperty()
+    chat: Chat
 }       
 
 export const CreateUserSchema = joi.object({

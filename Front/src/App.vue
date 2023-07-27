@@ -1,12 +1,22 @@
 <template>
   <div id="nav">
-    <RouterLink :to="{ name: 'Categories' }">Категории</RouterLink>
-    <RouterLink :to="{ name: 'Catalog' }">Товары</RouterLink>
+    <RouterLink v-if="is_admin" :to="{ name: 'Categories' }"
+      >Категории</RouterLink
+    >
+    <RouterLink v-if="is_admin" :to="{ name: 'Catalog' }">Товары</RouterLink>
     <RouterLink :to="{ name: 'Shop' }">Магазин</RouterLink>
-    <RouterLink :to="{ name: 'Catalog' }">Чат</RouterLink>
+    <RouterLink :to="{ name: 'Chat' }">Чат</RouterLink>
   </div>
   <router-view />
 </template>
+
+<script setup>
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+const is_admin = computed(() => store.getters.IS_ADMIN);
+</script>
 <style lang="scss">
 body {
   margin: 0;

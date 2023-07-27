@@ -1,23 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Generated, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from "@nestjs/swagger/dist"
 import { Message } from 'src/message/entities/message.entity';
 
 @Entity()
 export class Chat {
     @ApiProperty()
+    @PrimaryColumn()
     @PrimaryGeneratedColumn()
+    @Generated()
     id: number;
 
-    @ApiProperty()
-    @Column()
-    name: string
-
-    @ApiProperty()
-    @Column()
-    member_id: string
-
-    @ApiProperty()
-    @ManyToMany(() => Message)
-    @JoinTable()
+    @OneToMany  ((messages) => Message, (messages) => messages.chat_id)
     messages: Message[]
 }

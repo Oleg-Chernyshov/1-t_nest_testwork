@@ -8,11 +8,15 @@ export default createStore({
     catalog,
   },
 state: {
+    is_admin: localStorage.getItem("is_admin") ? true : false,
     products: [],
     cart: [],
     sum: 0
   },
   getters: {
+    IS_ADMIN (state) {
+      return state.is_admin
+    },
     PRODUCTS (state) {
       return state.products
     },
@@ -29,6 +33,10 @@ state: {
     }
   },
   mutations: {
+    SET_ADMIN: (state) => {
+      state.is_admin = true
+    },
+
     SET_PRODUCTS_TO_STATE: (state, products) => {
       state.products = products
     },
@@ -76,6 +84,9 @@ state: {
     },
     DELETE_FROM_CART ({ commit }, index) {
       commit('REMOVE_FROM_CART', index)
+    },
+    SET_ADMIN ({commit}){
+      commit('SET_ADMIN')
     }
   },
 

@@ -51,7 +51,7 @@ const routes = [
   {
     path: '/:catchAll(.*)',
     name: 'NotFound',
-    component: () => import('@/views/CatalogPage'),
+    component: () => import('@/views/Auth.vue'),
   },
   {
     path: '/shop',
@@ -63,7 +63,12 @@ const routes = [
     name: 'cart',
     component: () => import('../components/CommonUserComponents/v-cart.vue'),
     props: true
-  }
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: () => import('../views/Chat.vue')
+  },
 ]
 
 const router = createRouter({

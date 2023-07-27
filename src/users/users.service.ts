@@ -5,17 +5,21 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ChatService } from 'src/chat/chat.service';
     
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private repository: Repository<User>
+    private repository: Repository<User>,
+    private chatService: ChatService
   ) { }
 
   async register(data: CreateUserDto) {
+    const chat = await this.chatService.create({messages: []})
     const saltOrRounds = 10;
     data.password = await bcrypt.hash(data.password, saltOrRounds);
+    data.chat = {id: chat.id, messages: []}
     return this.repository.save(data);
   }
 
