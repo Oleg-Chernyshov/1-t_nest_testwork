@@ -26,6 +26,7 @@ export class AppController {
   @ApiResponse( { status:201 ,description:'Вход успешен', type: User })
   @Post('auth/login')
   async login(@Request() req) {
+    console.log(req.body.user);
     
     return  this.authService.login(req.body.user);
   }

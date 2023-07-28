@@ -8,7 +8,7 @@ export default createStore({
     catalog,
   },
 state: {
-    is_admin: localStorage.getItem("is_admin") ? true : false,
+    is_admin: localStorage.getItem("is_admin") == "true" ? true : false,
     products: [],
     cart: [],
     sum: 0
@@ -86,6 +86,7 @@ state: {
       commit('REMOVE_FROM_CART', index)
     },
     SET_ADMIN ({commit}){
+      console.log(1234);
       commit('SET_ADMIN')
     }
   },

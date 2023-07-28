@@ -1,16 +1,13 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayConnection} from '@nestjs/websockets';
-import { UseGuards, UsePipes } from '@nestjs/common/decorators';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket} from '@nestjs/websockets';
+import { UsePipes } from '@nestjs/common/decorators';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 import { Chat } from './entities/chat.entity';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiResponse } from '@nestjs/swagger/dist/decorators'; 
 import { JoiValidationPipe } from '../pipes/ValidationPipe'; 
 import { CreateChatScheme } from './dto/create-chat.dto';
-import { UpdateChatScheme } from './dto/update-chat.dto';
 import { Server, Socket } from 'socket.io';
-import { log } from 'console';
+import { MessageService } from 'src/message/message.service';
 
 @ApiTags("Chat")
 @WebSocketGateway({ cors: '*:*' })
@@ -23,7 +20,8 @@ export class ChatGateway {
     console.log(`Connected ${client.handshake.auth.cur_author}`);
   }
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService, 
+    private messageService: MessageService) {}
 
   @UsePipes(new JoiValidationPipe(CreateChatScheme))
   @ApiResponse( { status:201 ,description:'Чат создан', type: Chat })
@@ -43,5 +41,19 @@ export class ChatGateway {
   @SubscribeMessage('findOneChat')
   findOne(@MessageBody() id: number) {
     return this.chatService.findOne(id);
+  }
+
+  @ApiResponse( { status:200 ,description:'Получен один чат', type: Chat })
+  @SubscribeMessage('leaveChat')
+  leaveChat(@MessageBody() id: any, @ConnectedSocket() client: Socket) {
+    this.server.in(client.id).socketsLeave(String(id.id))
+  }
+
+  @ApiResponse( { status:200 ,description:'Получен один чат', type: Chat })
+  @SubscribeMessage('EnterChat')
+  async enterChat(@MessageBody() id: any,  @ConnectedSocket() client: Socket) {
+    this.server.in(client.id).socketsJoin(String(id.id))
+    const messages = await this.messageService.findAll(id) 
+    return { event: "findAllMessage", data: messages}
   }
 }

@@ -16,8 +16,14 @@ export class MessageService {
     return this.repository.save(createMessageDto);
   }
 
-  findAll() {
-    return this.repository.find();
+  findAll(id: any) {
+    return this.repository.find(
+      {
+        where:{
+          chat_id: id.id ? id : {id: id}
+        }
+      }
+    );
   }
 
 }

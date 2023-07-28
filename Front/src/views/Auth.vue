@@ -57,11 +57,14 @@ const onClick = () => {
       'user=' + JSON.stringify(form.value),
     )
     .then((result) => {
-      store.dispatch('SET_ADMIN');
       localStorage.setItem('access_token', result.data.access_token);
       localStorage.setItem('is_admin', result.data.is_admin);
       localStorage.setItem('id', result.data.id);
       localStorage.setItem('chat_id', result.data.chat_id);
+
+      if (localStorage.getItem('is_admin', result.data.is_admin) == true)
+        store.dispatch('SET_ADMIN');
+
       router.push('/shop');
     });
 };

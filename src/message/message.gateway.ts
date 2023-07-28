@@ -1,14 +1,8 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
-import { UseGuards, UsePipes } from '@nestjs/common/decorators';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './entities/message.entity';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiResponse } from '@nestjs/swagger/dist/decorators'; 
-import { JoiValidationPipe } from 'src/pipes/ValidationPipe';
-import { CreateMessageScheme } from './dto/create-message.dto';
-import { UpdateMessageScheme   } from './dto/update-message.dto';
 import { Socket, Server } from 'socket.io';
 
 @ApiTags("Message")
@@ -20,21 +14,23 @@ export class MessageGateway {
   server: Server;
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Connected ${client.handshake.auth.cur_author}`);
+    this.server.in(client.id).socketsJoin(client.handshake.auth.cur_author)
   }
 
 
-  @UsePipes(new JoiValidationPipe(CreateMessageScheme))
   @ApiResponse( { status:201 ,description:'Сообщение создано', type: Message })
   @SubscribeMessage('createMessage')
-  create(@MessageBody() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto);
+  async create(@MessageBody() createMessageDto: CreateMessageDto, @ConnectedSocket() client: Socket) {
+    let message =  await this.messageService.create(createMessageDto);
+    console.log( client);
+    
+    this.server.to(String(createMessageDto.chat_id)).emit('createMessage', message)
   }
 
   @ApiResponse( { status:200 ,description:'Получены все сообщения', type: [Message] })
   @SubscribeMessage('findAllMessage')
-  async findAll() {
-    const messages = await this.messageService.findAll() 
+  async findAll(@MessageBody() id) {
+    const messages = await this.messageService.findAll(Number(id))    
     return { event: "findAllMessage", data: messages}
   }
 }

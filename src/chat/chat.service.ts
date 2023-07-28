@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectRepository(Chat)
+  @InjectRepository(Chat)
     private repository: Repository<Chat>
   ) {}
 
