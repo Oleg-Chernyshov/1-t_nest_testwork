@@ -42,12 +42,12 @@ export default {
       commit('removeItem', idRemovedItem);
 
     },
-    addItem: async ({ commit }, { name, cost, category_id}) => {
-      const item = await api.add({ name, cost, category_id })
+    addItem: async ({ commit }, { name, photo_url, cost, category_id}) => {
+      const item = await api.add({ name, photo_url, cost, category_id })
       commit('setItem', item)
     },
-    updateItem: async ({ commit }, { id, name, cost, category_id }) => {
-      const item = await api.update({ id, name, cost, category_id });
+    updateItem: async ({ commit }, { id, name, photo_url, cost, category_id }) => {
+      const item = await api.update({ id, name, photo_url, cost, category_id });
       commit('updateItem', item)
     },
     filter: async ({ commit }, { type_id }) => {

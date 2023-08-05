@@ -12,7 +12,21 @@
         <tr v-for="(item, idx) in items" :key="idx">
           <td v-for="(key, idy) in colKeys" :key="idy">
             <slot :name="key" v-bind="{ item }">
-              <div v-if="key === 'name' && headers[0].isCatalog !== 'true'">
+              <div v-if="key == 'photo_url'">
+                <img
+                  v-if="item['photo_url']"
+                  :src="item['photo_url']"
+                  style="height: 200px; width: 200px"
+                />
+                <img
+                  v-else
+                  src="../../../public/placeholder_1000x.jpg"
+                  style="height: 200px; width: 200px"
+                />
+              </div>
+              <div
+                v-else-if="key === 'name' && headers[0].isCatalog !== 'true'"
+              >
                 <a @click.prevent="filter(item['id'])" href="#">{{
                   item[key]
                 }}</a>
@@ -30,11 +44,11 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { filter } from "@/store/catalog/selectors";
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { filter } from '@/store/catalog/selectors';
 export default {
-  name: "Table",
+  name: 'Table',
   props: {
     items: Array,
     headers: Array,
@@ -50,7 +64,7 @@ export default {
     return {
       filter(filter_id) {
         filter(store, filter_id);
-        router.push({ name: "CatalogSorted", params: { filter_id } });
+        router.push({ name: 'CatalogSorted', params: { filter_id } });
       },
     };
   },

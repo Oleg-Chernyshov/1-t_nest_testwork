@@ -13,6 +13,28 @@
         type="text"
       />
     </div>
+    <img
+      v-if="form.photo_url"
+      :src="form.photo_url"
+      style="
+        height: 200px;
+        width: 200px;
+        margin-left: 150px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      "
+    />
+    <div :class="$style.item" v-else>
+      <div :class="$style.label">
+        <label for="photo">Фотография</label>
+      </div>
+      <input
+        id="photo"
+        placeholder="Имя"
+        type="file"
+        @change="onFileChange($event)"
+      />
+    </div>
     <div :class="$style.item">
       <div :class="$style.label">
         <label for="name">Название</label>
@@ -61,34 +83,37 @@
 </template>
 
 <script>
-import { computed, reactive, onBeforeMount, watchEffect } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { computed, reactive, onBeforeMount, watchEffect, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
-import { selectItemById, fetchItems } from "@/store/catalog/selectors";
+import { selectItemById, fetchItems } from '@/store/catalog/selectors';
 import {
   selectItems as selectGroups,
   fetchItems as fetchGroups,
-} from "@/store/categories/selectors";
-import Btn from "@/components/Btn/Btn";
+} from '@/store/categories/selectors';
+import Btn from '@/components/Btn/Btn';
+import axios from 'axios';
 
 export default {
-  name: "CatalogForm",
+  name: 'CatalogForm',
   props: {
-    id: { type: String, default: "" },
+    id: { type: String, default: '' },
   },
   components: {
     Btn,
   },
   setup(props, context) {
+    const file = ref(null);
     const store = useStore();
     const router = useRouter();
     const CategoryList = computed(() => selectGroups(store));
     const form = reactive({
-      id: "",
-      name: "",
+      id: '',
+      name: '',
+      photo_url: null,
       cost: 0,
-      category_id: "",
+      category_id: '',
     });
 
     onBeforeMount(() => {
@@ -99,7 +124,7 @@ export default {
     watchEffect(() => {
       const type = selectItemById(store, props.id);
       Object.keys(type).forEach((category_name) => {
-        if (category_name == "category_id") {
+        if (category_name == 'category_id') {
           form[category_name] = type[category_name].name;
         } else form[category_name] = type[category_name];
       });
@@ -109,18 +134,30 @@ export default {
       CategoryList,
       form,
       isValidForm: computed(
-        () => !!(form.name && form.cost >= 0 && form.category_id)
+        () => !!(form.name && form.cost >= 0 && form.category_id),
       ),
-      onClick: () => {
+      onClick: async () => {
+        if (file.value)
+          await axios
+            .post(
+              'http://localhost:3000/files',
+              { file: file.value },
+              { headers: { 'Content-Type': 'multipart/form-data' } },
+            )
+            .then((result) => {
+              form.photo_url = result.data;
+            });
         let index = -1;
         for (let i = 0; i < CategoryList.value.length; i++) {
           if (CategoryList.value[i].name == form.category_id)
             index = CategoryList.value[i].id;
         }
         form.category_id = index;
-        console.log(form);
-        context.emit("submit", form);
-        router.push({ name: "Catalog" });
+        context.emit('submit', form);
+        router.push({ name: 'Catalog' });
+      },
+      onFileChange: (data) => {
+        file.value = data.target.files[0];
       },
     };
   },

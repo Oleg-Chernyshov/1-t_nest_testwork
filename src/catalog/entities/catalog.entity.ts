@@ -11,6 +11,10 @@ export class Catalog {
 
     @ApiProperty()
     @Column()
+    photo_url: string
+
+    @ApiProperty()
+    @Column()
     name: string
 
     @ApiProperty()

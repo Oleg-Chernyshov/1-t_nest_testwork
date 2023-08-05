@@ -8,6 +8,9 @@ export class CreateCatalogDto {
     name: string
 
     @ApiProperty()
+    file_url: string
+
+    @ApiProperty()
     cost: number
 
     @ApiProperty()

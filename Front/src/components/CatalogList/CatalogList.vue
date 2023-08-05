@@ -4,6 +4,7 @@
       :headers="[
         { isCatalog: 'true' },
         { value: 'id', text: 'ID' },
+        { value: 'photo_url', text: 'Фотография' },
         { value: 'name', text: 'Название' },
         { value: 'cost', text: 'Цена' },
         { value: 'category_id', text: 'Тип' },
@@ -28,16 +29,16 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useStore } from 'vuex';
+import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { selectItems, removeItem, fetchItems } from "@/store/catalog/selectors";
-import Table from "@/components/Table/Table";
-import Btn from "@/components/Btn/Btn";
+import { selectItems, removeItem, fetchItems } from '@/store/catalog/selectors';
+import Table from '@/components/Table/Table';
+import Btn from '@/components/Btn/Btn';
 
 export default {
-  name: "CatalogList",
+  name: 'CatalogList',
   components: {
     Table,
     Btn,
@@ -52,18 +53,18 @@ export default {
       items: computed(() => selectItems(store)),
       onClickRemove: (id) => {
         const isConfirmRemove = confirm(
-          "Вы действительно хотите удалить запись?"
+          'Вы действительно хотите удалить запись?',
         );
         if (isConfirmRemove) {
           removeItem(store, id);
         }
       },
       onClickEdit: (id) => {
-        router.push({ name: "CatalogEdit", params: { id } });
+        router.push({ name: 'CatalogEdit', params: { id } });
       },
       Refresh() {
         fetchItems(store);
-        router.push({ name: "Catalog" });
+        router.push({ name: 'Catalog' });
       },
     };
   },
