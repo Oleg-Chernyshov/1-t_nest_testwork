@@ -35,10 +35,9 @@ export class CatalogController {
   }
 
   @UseGuards(AuthGuard('jwt'))  
-  //@UsePipes(new JoiValidationPipe(UpdateCatalogScheme))
   @ApiResponse( { status:201 ,description:'Товар обновлен', type: Catalog })
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: string, @Body() updateCatalogDto: UpdateCatalogDto) {
+  update(@Param('id', ParseIntPipe) id: string, @Body(new JoiValidationPipe(UpdateProductScheme)) updateCatalogDto: UpdateCatalogDto) {
     return this.catalogService.update(+id, updateCatalogDto);
   }
 

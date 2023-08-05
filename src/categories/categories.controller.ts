@@ -36,10 +36,9 @@ export class CategoriesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  //@UsePipes(new JoiValidationPipe(UpdateCategoryScheme))
   @Patch(':id')
   @ApiResponse( { status:201 ,description:'Обновлена категория', type: Category })
-  update(@Param('id', ParseIntPipe) id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+  update(@Param('id', ParseIntPipe) id: string, @Body(new JoiValidationPipe(UpdateCategoryScheme)) updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(+id, updateCategoryDto);
   }
 
