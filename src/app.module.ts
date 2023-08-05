@@ -14,6 +14,7 @@ import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { Chat } from './chat/entities/chat.entity';
 import { Message } from './message/entities/message.entity';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [CatalogModule, CategoriesModule, UsersModule, AuthModule,     
@@ -26,7 +27,7 @@ import { Message } from './message/entities/message.entity';
     database: '1t_shop',
     entities: [Category, Catalog, User, Chat, Message],
     synchronize: true,
-  }), ChatModule, MessageModule,],
+  }), ChatModule, MessageModule, FilesModule,],
   controllers: [AppController],
   providers: [AppService],
 })
